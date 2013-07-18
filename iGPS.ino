@@ -121,8 +121,8 @@ void loop(){
 boolean readGPS() {
     String sub = readLine();
     if(sub.length()) {
-      Serial.println(sub);
-      Serial.println("-------------------------------------------");
+//      Serial.println(sub);
+//      Serial.println("-------------------------------------------");
       int split = sub.indexOf(',');    
       String field = sub.substring(0,split);
       if(field.equals(GPRMC)) {
@@ -135,7 +135,7 @@ boolean readGPS() {
   return false;
 }
 
-// process GPRMVC
+// process GPRMC
 void processGPRMC(String sub){
   String time = splitString(sub,',',1);
   String hour = time.substring(0, 2);
@@ -211,12 +211,13 @@ void processGPGGA(String sub){
 String readLine(){
   String line = "";
   while(GPSSerial.available()) {
-      delay(5);
+//      delay(1);
       char c = char(GPSSerial.read());
-//      if(c == '\r'){
-//        // do nothing
-//        continue;
-//      }
+      Serial.print(c);
+      if(c == '\r'){
+        // do nothing
+        continue;
+      }
       if(c != '\n'){
         line += c;
       } else {
@@ -227,22 +228,21 @@ String readLine(){
 
 // Split String
 String splitString(String s, char parser,int index) {
-  String rs='\0';
+  String rs = '\0';
   int parserIndex = index;
-  int parserCnt=0;
-  int rFromIndex=0, rToIndex=-1;
+  int parserCnt = 0;
+  int fromIndex = 0, toIndex = -1;
 
-  while(index>=parserCnt){
-    rFromIndex = rToIndex+1;
-    rToIndex = s.indexOf(parser,rFromIndex);
+  while(index >= parserCnt) {
+    fromIndex = toIndex + 1;
+    toIndex = s.indexOf(parser, fromIndex);
 
     if(index == parserCnt){
-      if(rToIndex == 0 || rToIndex == -1){
-        return '\0';
+      if(toIndex == 0 || toIndex == -1){
+        return rs;
       }
-      return s.substring(rFromIndex,rToIndex);
-    }
-    else{
+      return s.substring(fromIndex,toIndex);
+    } else{
       parserCnt++;
     }
   }
