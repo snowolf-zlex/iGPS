@@ -1,6 +1,8 @@
 /*
-* GPS解析，时间、日期、经纬度
-*/
+ * GPS解析
+ * 包括：
+ * 时间、日期、经纬度、海拔
+ */
 #include <SoftwareSerial.h>
 #include "LCD4884.h"
 
@@ -12,14 +14,14 @@
 #define GPGGA "$GPGGA" // 获取海拔高度
 #define GPZDA "$GPZDA" // UTC时间/日期及本地时区偏移量
 
-#define VALID "A" // Valid
-#define INVALID "V" // V=Invalid
+#define VALID "A" // A=Valid 有效
+#define INVALID "V" // V=Invalid 无效
 
-#define LOCAL_AREA 8
+#define LOCAL_AREA 8 // 本地时区 TODO：使用$GPZDA替换
 
-#define CHAR_DEGREE char(176)
-#define CHAR_MINUTE char(39)
-#define CHAR_SECOND char(34)
+#define CHAR_DEGREE char(176) // 度
+#define CHAR_MINUTE char(39)  // 分
+#define CHAR_SECOND char(34)  // 秒
 
 // joystick number
 #define LEFT_KEY 0
@@ -109,7 +111,7 @@ void loop(){
     char altBuf[10];  
     gps.altString.toCharArray(altBuf,10);
     lcd.LCD_write_string(0, 4, altBuf, MENU_NORMAL);
-//    // sog
+    // sog
 //    char sogBuf[10];  
 //    gps.sogString.toCharArray(sogBuf,10);
 //    lcd.LCD_write_string(0, 5, sogBuf, MENU_NORMAL);
