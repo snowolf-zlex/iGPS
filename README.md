@@ -1,4 +1,4 @@
 iGPS
 ====
 
-Simple GPS Lib
+Simple GPS lib for Arduino
