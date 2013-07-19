@@ -250,43 +250,33 @@ String splitString(String s, char parser,int index) {
 }
 
 
-
 /**
- * 数据转换：将字符型数据转换为浮点型数据
- * data：要转换的数组；
- * num：保留位数
+ * 字符串变浮点数
  */
-double dataTransfer(char *data, char num) {
-  double d = 0.0;
-	char zero = 0x30;
-	//负数的情况
-	if (data[0] == '-') {
-		unsigned char i = 1;
-		//数组中的字符型数据转换成整数并累加
-		while (data[i] != '.') {
-			d = d * 10 + (data[i++] - zero);
-		}
-		for (unsigned char j = 0; j < num; j++) {
-			d = d * 10 + (data[++i] - zero);
-		}
-		//将转换后的整数转换成浮点数
-		for (unsigned char j = 0; j < num; j++) {
-			d = d / 10;
-		}
-		//转换成负数
-		d = (-1) * d;
-	} else {
-		//正数情况
-		unsigned char i = 0;
-		while (data[i] != '.') {
-			d = d * 10 + (data[i++] - zero);
-		}
-		for (unsigned char j = 0; j < num; j++) {
-			d = d * 10 + (data[++i] - zero);
-		}
-		for (unsigned char j = 0; j < num; j++) {
-			d = d / 10;
-		}
-	}
-	return d;
+double toDouble(String str){
+  double d = 0.000;
+  int index = str.indexOf('.');
+  
+  if(index){
+    int i = str.substring(0, (index+1)).toInt();
+    String s = str.substring((index+1), str.length());
+    int f = s.toInt();
+    
+    // int
+    d += i;
+    
+    double t = 0.0 + f;
+    // float
+    for(int j = 0; j < s.length(); j++) {
+      t = t/10;      
+    }
+    
+    if(i > 0 ){
+      d += t;
+    } else {
+      d += (-1) * t; 
+    }
+    
+  }
+  return d;
 }
