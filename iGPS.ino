@@ -254,7 +254,7 @@ String splitString(String s, char parser,int index) {
  * 字符串变浮点数
  */
 double toDouble(String str){
-  double d = 0.000;
+  double d = 0.0;
   int index = str.indexOf('.');
   
   if(index){
