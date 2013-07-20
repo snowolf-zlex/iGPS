@@ -1,27 +1,32 @@
-#ifndef GPSLib_h
-#define GPSLib_h
+#ifndef GPSDecoder_h
+#define GPSDecoder_h
 
 #include <Arduino.h>
 
-/**
- * GPS库文件接口定义
- */
-class GPSLib {
-  public:
-    boolean isValid(); // 是否已定位
-    
-    String utcDate(); // 标准日期 dd/mm/yy
-    
-    String utcTime(); // 标准时间 hh:mm:ss
-    
-    double longitude(); // 经度 dddmm.mmmm 
-    
-    double latitude(); // 纬度 ddmm.mmmm 
 
-    double altitude(); // 海拔
+/**
+ * GPS编码解析器
+ */
+class GPSDecoder {
+  public:
+    GPSDecoder();//
+    
+    bool isValid(); // 是否已定位
+    
+    // String utcDate(); // 标准日期 dd/mm/yy
+    
+    // String utcTime(); // 标准时间 hh:mm:ss
+    
+    // double longitude(); // 经度 dddmm.mmmm 
+    
+    // double latitude(); // 纬度 ddmm.mmmm 
+
+    // double altitude(); // 海拔
     
   private:    
-    boolean validStatus; // T=Valid,F=Invalid 定位状态
+//    SoftwareSerial* serial; // 串口
+  
+    bool validStatus; // T=Valid,F=Invalid 定位状态
     
     // 日期
     String utcDate; // 标准日期 ddmmyy
@@ -52,7 +57,9 @@ class GPSLib {
     
     // 海拔
     double altitude; // 海拔
-    char altitudeUnit; //	单位M		M=Meters
+    char altitudeUnit; //  单位M		M=Meters
+    
+    String readLine(); // 读串口 行数据读取
 };
 
 #endif
