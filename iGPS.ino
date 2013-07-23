@@ -23,12 +23,19 @@
 #define CHAR_MINUTE char(39)  // 分
 #define CHAR_SECOND char(34)  // 秒
 
+// joystick pin
+#define KEY_PIN 0
+
 // joystick number
-#define LEFT_KEY 0
-#define CENTER_KEY 1
-#define DOWN_KEY 2
-#define RIGHT_KEY 3
-#define UP_KEY 4
+enum KEY{
+      LEFT_KEY, 
+      CENTER_KEY, 
+      DOWN_KEY, 
+      RIGHT_KEY, 
+      UP_KEY
+};
+
+#define NUM_KEYS 5
 
 // GPS Serial
 SoftwareSerial GPSSerial(GPS_TX, GPS_RX); // RX, TX
@@ -279,4 +286,41 @@ double toDouble(String str){
     
   }
   return d;
+}
+
+/*
+ *         String s = "";
+        switch(a) {
+          case LEFT_KEY:
+            s = "LEFT";
+            break;               
+          case CENTER_KEY:
+            s = "CENTER";
+            break;               
+          case DOWN_KEY:
+            s = "DOWN";
+            break;               
+          case RIGHT_KEY:
+            s = "RIGHT";
+            break;               
+          case UP_KEY:
+            s = "UP";
+            break;               
+          default: 
+            s = "UNPRESSD";
+            break;
+        }
+ */
+// Convert ADC value to key number
+int getKey() {
+  int input = analogRead(KEY_PIN);
+  
+  int k = NUM_KEYS; // No valid key pressed
+
+  for (k = 0; k < NUM_KEYS; k++) {
+    if (input < ADC_KEY[k]) {
+      return k;
+    }
+  }
+  return k;
 }
