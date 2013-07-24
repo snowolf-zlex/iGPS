@@ -314,7 +314,7 @@ double toDouble(String str){
         }
  */
 // Convert ADC value to key number
-int LCD4884::getKey(void) {
+int getKey(void) {
       int input = analogRead(KEY_PIN);
 
 	for (int k = 0; k < NUM_KEYS; k++) {
