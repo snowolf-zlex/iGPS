@@ -37,6 +37,8 @@ enum KEY{
 
 #define NUM_KEYS 5
 
+int ADC_KEY[5] = { 50, 200, 400, 600, 800 };
+
 // GPS Serial
 SoftwareSerial GPSSerial(GPS_TX, GPS_RX); // RX, TX
 
@@ -312,15 +314,13 @@ double toDouble(String str){
         }
  */
 // Convert ADC value to key number
-int getKey() {
-  int input = analogRead(KEY_PIN);
-  
-  int k = NUM_KEYS; // No valid key pressed
+int LCD4884::getKey(void) {
+      int input = analogRead(KEY_PIN);
 
-  for (k = 0; k < NUM_KEYS; k++) {
-    if (input < ADC_KEY[k]) {
-      return k;
-    }
-  }
-  return k;
+	for (int k = 0; k < NUM_KEYS; k++) {
+		if (input < ADC_KEY[k]) {
+			return k;
+		}
+	}
+	return -1;
 }
