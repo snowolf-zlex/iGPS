@@ -194,7 +194,7 @@ void processGPRMC(String sub){
 // process GPGGA
 void processGPGGA(String sub){ 
   boolean ggaStatus = splitString(sub,',',6).toInt();
-  if(ggaStatus){
+  if((ggaStatus==1)||(ggaStatus==2)){
     gps.altString = splitString(sub,',',9);
     gps.altString += splitString(sub,',',10);
   //  Serial.println(gps.altString);
