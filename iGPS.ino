@@ -23,21 +23,6 @@
 #define CHAR_MINUTE char(39)  // 分
 #define CHAR_SECOND char(34)  // 秒
 
-// joystick pin
-#define KEY_PIN 0
-
-// joystick number
-enum KEY{
-      LEFT_KEY, 
-      CENTER_KEY, 
-      DOWN_KEY, 
-      RIGHT_KEY, 
-      UP_KEY
-};
-
-#define NUM_KEYS 5
-
-int ADC_KEY[5] = { 50, 200, 400, 600, 800 };
 
 // GPS Serial
 SoftwareSerial GPSSerial(GPS_TX, GPS_RX); // RX, TX
@@ -91,8 +76,8 @@ void setup(){
   GPSSerial.begin(9600);
   GPSSerial.flush();
 
-  lcd.LCD_init();
-  lcd.LCD_clear();
+  lcd.init();
+  lcd.clear();
 }
 
 void loop(){ 
@@ -107,23 +92,23 @@ void loop(){
     char lonBuf[20];
   
     gps.date.toCharArray(dateBuf,15);
-    lcd.LCD_write_string(0, 0, dateBuf, MENU_NORMAL);
+    lcd.write_string(0, 0, dateBuf);
     gps.time.toCharArray(timeBuf,15);
-    lcd.LCD_write_string(0, 1, timeBuf, MENU_NORMAL);
+    lcd.write_string(0, 1, timeBuf);
     if(gps.isValid){
       gps.latString.toCharArray(latBuf,15);
-      lcd.LCD_write_string(0, 2, latBuf, MENU_NORMAL);
+      lcd.write_string(0, 2, latBuf);
       gps.lonString.toCharArray(lonBuf,15);
-      lcd.LCD_write_string(0, 3, lonBuf, MENU_NORMAL);
+      lcd.write_string(0, 3, lonBuf);
     }
     // alt
     char altBuf[10];  
     gps.altString.toCharArray(altBuf,10);
-    lcd.LCD_write_string(0, 4, altBuf, MENU_NORMAL);
+    lcd.write_string(0, 4, altBuf, LCD_NORMAL);
     // sog
 //    char sogBuf[10];  
 //    gps.sogString.toCharArray(sogBuf,10);
-//    lcd.LCD_write_string(0, 5, sogBuf, MENU_NORMAL);
+//    lcd.write_string(0, 5, sogBuf);
   }
 }
 
@@ -313,14 +298,3 @@ double toDouble(String str){
             break;
         }
  */
-// Convert ADC value to key number
-int getKey(void) {
-      int input = analogRead(KEY_PIN);
-
-	for (int k = 0; k < NUM_KEYS; k++) {
-		if (input < ADC_KEY[k]) {
-			return k;
-		}
-	}
-	return -1;
-}
