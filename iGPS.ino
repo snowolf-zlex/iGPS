@@ -3,11 +3,8 @@
  * 包括：
  * 时间、日期、经纬度、海拔
  */
-#include <SoftwareSerial.h>
-#include "LCD4884.h"
 
-#define GPS_RX 12
-#define GPS_TX 13
+#include "LCD4884.h"
 
 #define GPRMC "$GPRMC" // 推荐最小定位信息
 #define GPVTG "$GPVTG" // 地面速度信息
@@ -23,12 +20,8 @@
 #define CHAR_MINUTE char(39)  // 分
 #define CHAR_SECOND char(34)  // 秒
 
-
-// GPS Serial
-SoftwareSerial GPSSerial(GPS_RX, GPS_TX); // RX, TX
-
 // SoftwareSerial 缓冲
-#define _SS_MAX_RX_BUFF 256
+//#define _SS_MAX_RX_BUFF 128
 
 boolean LIGHT_STATUS = 0;
 
@@ -75,8 +68,8 @@ struct GPS_INFO {
 void setup(){
   Serial.begin(4800);
   Serial.flush();
-  GPSSerial.begin(9600);
-  GPSSerial.flush();
+  Serial1.begin(9600);
+//  Serial3.flush();
 
   lcd.init();
   lcd.clear();
@@ -117,8 +110,8 @@ void loop(){
 boolean readGPS() {
     String sub = readLine();
     if(sub.length()) {
-//      Serial.println(sub);
-//      Serial.println("-------------------------------------------");
+      Serial.println(sub);
+      Serial.println("-------------------------------------------");
       int split = sub.indexOf(',');    
       String field = sub.substring(0,split);
       if(field.equals(GPRMC)) {
@@ -142,7 +135,7 @@ void processGPRMC(String sub){
   gps.second = second.toInt();       
   gps.time = hour + ':' + minute + ':' + second;      
 
-// Serial.println(gps.time);
+ Serial.println(gps.time);
       
   int localHour = ((gps.hour + LOCAL_AREA) % 24); // 8
   String localHourStr = String(100 + localHour); // 108
@@ -151,7 +144,7 @@ void processGPRMC(String sub){
   gps.localTime = gps.time;
   gps.localTime.replace(gps.localTime.substring(0,2),localHourStr);
 
-// Serial.println(gps.localTime); 
+ Serial.println(gps.localTime); 
 
   String date = splitString(sub,',',9);       
   gps.day = date.substring(0,2);
@@ -159,7 +152,7 @@ void processGPRMC(String sub){
   gps.year = date.substring(4,6);
   gps.date = gps.day + '/' + gps.month + '/' + gps.year;   
      
-// Serial.println(gps.date);
+ Serial.println(gps.date);
 
   String valid = splitString(sub,',',2);
   gps.isValid = (valid.equals(VALID) ? true : false);
@@ -176,7 +169,7 @@ void processGPRMC(String sub){
 
     gps.northingIndicator = splitString(sub,',',4);
     gps.latString = degreeOfLat + CHAR_DEGREE + minuteOfLat + CHAR_MINUTE + gps.secondOfLat + CHAR_SECOND + gps.northingIndicator;
-// Serial.println(gps.latString); 
+ Serial.println(gps.latString); 
   
     // Longitude
     gps.lon = splitString(sub,',',5);
@@ -189,7 +182,7 @@ void processGPRMC(String sub){
 
     gps.eastingIndicator = splitString(sub,',',6);
     gps.lonString = degreeOfLon + CHAR_DEGREE + minuteOfLon + CHAR_MINUTE + gps.secondOfLon + CHAR_SECOND + gps.eastingIndicator;
-// Serial.println(gps.lonString); 
+ Serial.println(gps.lonString); 
   }
 }
 
@@ -199,16 +192,16 @@ void processGPGGA(String sub){
   if((ggaStatus==1)||(ggaStatus==2)){
     gps.altString = splitString(sub,',',9);
     gps.altString += splitString(sub,',',10);
-  //  Serial.println(gps.altString);
+  Serial.println(gps.altString);
   }
 }
 
 //0x0D 0x0A CR LF \r \n
 String readLine(){
   String line = "";
-  while(GPSSerial.available()) {
-//      delay(1);
-      char c = char(GPSSerial.read());
+  while(Serial1.available()) {
+      delay(3);
+      char c = char(Serial1.read());
       Serial.print(c);
       if(c == '\r'){
         // do nothing
