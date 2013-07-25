@@ -131,8 +131,10 @@ boolean readGPS() {
     String sub = readLine();
     if(sub.length()) {
       sdFile = SD.open("gps.txt", FILE_WRITE);
-      sdFile.println(sub);
-      sdFile.close();
+      if (sdFile) {
+        sdFile.println(sub);
+        sdFile.close();
+      }
       int split = sub.indexOf(',');    
       String field = sub.substring(0,split);
       if(field.equals(GPRMC)) {
