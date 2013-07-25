@@ -6,8 +6,8 @@
 #include <SoftwareSerial.h>
 #include "LCD4884.h"
 
-#define GPS_TX 12
-#define GPS_RX 13
+#define GPS_RX 12
+#define GPS_TX 13
 
 #define GPRMC "$GPRMC" // 推荐最小定位信息
 #define GPVTG "$GPVTG" // 地面速度信息
@@ -19,13 +19,16 @@
 
 #define LOCAL_AREA 8 // 本地时区 TODO：使用$GPZDA替换
 
-#define CHAR_DEGREE char(176) // 度
+#define CHAR_DEGREE char(132) // 度 LCD显示 132 ，iso8859-1 176
 #define CHAR_MINUTE char(39)  // 分
 #define CHAR_SECOND char(34)  // 秒
 
 
 // GPS Serial
-SoftwareSerial GPSSerial(GPS_TX, GPS_RX); // RX, TX
+SoftwareSerial GPSSerial(GPS_RX, GPS_TX); // RX, TX
+
+// SoftwareSerial 缓冲
+#define _SS_MAX_RX_BUFF 256
 
 boolean LIGHT_STATUS = 0;
 
