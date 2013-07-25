@@ -6,6 +6,8 @@
 
 #include "LCD4884.h"
 
+#include <SD.h>
+
 #define GPRMC "$GPRMC" // 推荐最小定位信息
 #define GPVTG "$GPVTG" // 地面速度信息
 #define GPGGA "$GPGGA" // 获取海拔高度
@@ -22,6 +24,14 @@
 
 // SoftwareSerial 缓冲
 //#define _SS_MAX_RX_BUFF 128
+
+//SD card attached to SPI bus as follows:
+//#define SD_MOSI 11
+//#define SD_MISO 12
+//#define SD_CLK 13
+#define SD_CS 4
+
+File sdFile;
 
 boolean LIGHT_STATUS = 0;
 
@@ -73,6 +83,16 @@ void setup(){
 
   lcd.init();
   lcd.clear();
+  
+  if (!SD.begin(SD_CS)) {
+//    Serial.println("initialization failed!");
+    return;
+  }
+//  Serial.println("initialization done.");
+  
+  // open the file. note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+  
 }
 
 void loop(){ 
@@ -110,8 +130,9 @@ void loop(){
 boolean readGPS() {
     String sub = readLine();
     if(sub.length()) {
-      Serial.println(sub);
-      Serial.println("-------------------------------------------");
+      sdFile = SD.open("gps.txt", FILE_WRITE);
+      sdFile.println(sub);
+      sdFile.close();
       int split = sub.indexOf(',');    
       String field = sub.substring(0,split);
       if(field.equals(GPRMC)) {
