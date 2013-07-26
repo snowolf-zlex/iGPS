@@ -222,9 +222,10 @@ void processGPGGA(String sub){
 //0x0D 0x0A CR LF \r \n
 String readLine(){
   String line = "";
+  delay(500);
   while(Serial1.available()) {
-      delay(3);
       char c = char(Serial1.read());
+      delay(50);
       Serial.print(c);
       if(c == '\r'){
         // do nothing
