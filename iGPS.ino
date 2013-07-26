@@ -18,12 +18,12 @@
 
 #define LOCAL_AREA 8 // 本地时区 TODO：使用$GPZDA替换
 
-#define CHAR_DEGREE char(132) // 度 LCD显示 132 ，iso8859-1 176
+#define CHAR_DEGREE char(122) // 度 LCD显示 122 ，iso8859-1 176
 #define CHAR_MINUTE char(39)  // 分
 #define CHAR_SECOND char(34)  // 秒
 
 // SoftwareSerial 缓冲
-//#define _SS_MAX_RX_BUFF 128
+#define _SS_MAX_RX_BUFF 256
 
 //SD card attached to SPI bus as follows:
 //#define SD_MOSI 11
@@ -79,7 +79,6 @@ void setup(){
   Serial.begin(4800);
   Serial.flush();
   Serial1.begin(9600);
-//  Serial3.flush();
 
   lcd.init();
   lcd.clear();
@@ -130,7 +129,7 @@ void loop(){
 boolean readGPS() {
     String sub = readLine();
     if(sub.length()) {
-      sdFile = SD.open("gps.txt", FILE_WRITE);
+      sdFile = SD.open("gps-0726.txt", FILE_WRITE);
       if (sdFile) {
         sdFile.println(sub);
         sdFile.close();
@@ -158,7 +157,7 @@ void processGPRMC(String sub){
   gps.second = second.toInt();       
   gps.time = hour + ':' + minute + ':' + second;      
 
- Serial.println(gps.time);
+// Serial.println(gps.time);
       
   int localHour = ((gps.hour + LOCAL_AREA) % 24); // 8
   String localHourStr = String(100 + localHour); // 108
@@ -167,7 +166,7 @@ void processGPRMC(String sub){
   gps.localTime = gps.time;
   gps.localTime.replace(gps.localTime.substring(0,2),localHourStr);
 
- Serial.println(gps.localTime); 
+// Serial.println(gps.localTime); 
 
   String date = splitString(sub,',',9);       
   gps.day = date.substring(0,2);
@@ -175,7 +174,7 @@ void processGPRMC(String sub){
   gps.year = date.substring(4,6);
   gps.date = gps.day + '/' + gps.month + '/' + gps.year;   
      
- Serial.println(gps.date);
+// Serial.println(gps.date);
 
   String valid = splitString(sub,',',2);
   gps.isValid = (valid.equals(VALID) ? true : false);
@@ -192,7 +191,7 @@ void processGPRMC(String sub){
 
     gps.northingIndicator = splitString(sub,',',4);
     gps.latString = degreeOfLat + CHAR_DEGREE + minuteOfLat + CHAR_MINUTE + gps.secondOfLat + CHAR_SECOND + gps.northingIndicator;
- Serial.println(gps.latString); 
+// Serial.println(gps.latString); 
   
     // Longitude
     gps.lon = splitString(sub,',',5);
@@ -205,7 +204,7 @@ void processGPRMC(String sub){
 
     gps.eastingIndicator = splitString(sub,',',6);
     gps.lonString = degreeOfLon + CHAR_DEGREE + minuteOfLon + CHAR_MINUTE + gps.secondOfLon + CHAR_SECOND + gps.eastingIndicator;
- Serial.println(gps.lonString); 
+// Serial.println(gps.lonString); 
   }
 }
 
@@ -215,17 +214,17 @@ void processGPGGA(String sub){
   if((ggaStatus==1)||(ggaStatus==2)){
     gps.altString = splitString(sub,',',9);
     gps.altString += splitString(sub,',',10);
-  Serial.println(gps.altString);
+//  Serial.println(gps.altString);
   }
 }
 
 //0x0D 0x0A CR LF \r \n
 String readLine(){
   String line = "";
-  delay(500);
+//  delay(50);
   while(Serial1.available()) {
       char c = char(Serial1.read());
-      delay(50);
+      delay(5);
       Serial.print(c);
       if(c == '\r'){
         // do nothing
