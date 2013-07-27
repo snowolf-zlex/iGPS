@@ -59,7 +59,7 @@ double GPSDecoder::toDouble(String str){
         int i = str.substring(0, (index+1)).toInt();
         String s = str.substring((index+1), str.length());
         int f = s.toInt();
-        
+
         // int
         d += i;
         
@@ -68,11 +68,11 @@ double GPSDecoder::toDouble(String str){
         for(int j = 0; j < s.length(); j++) {
             t = t/10;
         }
-        
-        if(i > 0 ){
+
+        if(i >= 0 ){
             d += t;
         } else {
-            d += (-1) * t; 
+            d += (-1) * t;
         }
         
     }
@@ -83,9 +83,9 @@ double GPSDecoder::toDouble(String str){
 void GPSDecoder::processGPRMC(String sub){
     String valid = split(sub,',',2);
     _validStatus = (valid.equals(VALID) ? true : false);
-    if(!_validStatus) {
-        return;
-    }
+//    if(!_validStatus) {
+//        return;
+//    }
     
     String time = split(sub,',',1);
     String hour = time.substring(0, 2);
